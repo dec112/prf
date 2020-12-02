@@ -1,5 +1,3 @@
-# !!! UNDER CONSTRUCTION !!! #
-
 # DEC112/DEC112 PRF qngin service
 
 __Guide to build the PRF qngin service from sources.__
@@ -75,30 +73,4 @@ cd qngin/src
 cp ../docker/Dockerfile .
 docker build --tag qngin:1.0 .
 ```
-
-```
-[Unit]
-Description=DECTS PRF Container
-After=docker.service network-online.target
-Requires=docker.service
-
-[Service]
-Restart=always
-TimeoutStartSec=5
-ExecStart=/bin/sh -c 'docker rm -f qngin; \
-			docker run -d --rm=true --name qngin \
-					--network bridge \
-					--hostname qngin \
-					-v /home/user/prf/qngin/test.yml:/home/config.yml \
-					-v /home/user/prf/data/prf.sqlite:/home/prf.sqlite \
-					-v /home/user/prf/qngin/bin/log4crc:/home/log4crc \
-					-w /home/ qngin:1.0'
-
-ExecStop=/usr/bin/docker stop qngin
-
-[Install]
-WantedBy=multi-user.target
-```
-
-
 
