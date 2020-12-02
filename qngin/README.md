@@ -49,8 +49,8 @@ Additionally, qngin requires a YAML configuration file (`./config/config.yml`) t
 ```        
 websockets:
     - ws://yourservice1:8000/mgmt/api/v1?api_key=yourkey1
-	- ws://yourservice2:8000/mgmt/api/v1?api_key=yourkey2
-	- ws://yourservice3:8000/mgmt/api/v1?api_key=yourkey3
+    - ws://yourservice2:8000/mgmt/api/v1?api_key=yourkey2
+    - ws://yourservice3:8000/mgmt/api/v1?api_key=yourkey3
 # ...
 ```
 ## Compiling and running the PRF qngin service
