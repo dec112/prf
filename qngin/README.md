@@ -44,7 +44,7 @@ cd ../data
 sqlite3 prf.sqlite < SQLitePrfDB.sql
 ```
 
-Additionally, qngin requires a YAML configuration file (`./config/config.yml') that lists all DEC112 Border services to which qngin subscribes HEALTH information. An example is given below.
+Additionally, qngin requires a YAML configuration file (`./config/config.yml`) that lists all DEC112 Border services to which qngin subscribes HEALTH information. An example is given below.
 
 ```        
 websockets:
