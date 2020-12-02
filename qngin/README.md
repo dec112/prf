@@ -19,7 +19,7 @@ This is a step by step tutorial about how to build and install the DEC112 PRF qn
 ## Prerequisites
 
 To be able to compile the DEC112 PRF qngin, make sure that you've installed or dowdowloaded the following:
-* libyaml-dev, liblog4c-dev, sqlite3
+* libyaml-dev, liblog4c-dev, libsqlite3-dev, sqlite3
 * mongoose.c and mongoose.h ([mongoose](https://github.com/cesanta/mongoose))
 * cjson.c and cjson.h ([cjson](https://github.com/DaveGamble/cJSON))
 
