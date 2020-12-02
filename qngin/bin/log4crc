@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4c SYSTEM "">
+<log4c>
+    <config>
+        <bufsize>0</bufsize>
+        <debug level="0"/>
+        <nocleanup>0</nocleanup>
+    </config>
+        <category name="root" priority="trace"/>
+        <rollingpolicy name="logrp" type="sizewin" maxsize="26214400" maxnum="10" />
+	<appender name="logfa" type="rollingfile" logdir="/home/log/" prefix="log" layout="dated" rollingpolicy="logrp" />
+	<appender name="syslog" type="syslog" layout="basic"/>
+        <layout name="basic" type="basic"/>
+        <layout name="dated" type="dated"/>
+        <category name="qngin.dbg" priority="debug" appender="stdout" />
+        <category name="qngin.info" priority="info" appender="logfa" />
+</log4c>
+

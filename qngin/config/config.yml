@@ -1,0 +1,3 @@
+# qngin config
+websockets:
+    - ws://yourservice:8000/mgmt/api/v1?api_key=yourkey

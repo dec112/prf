@@ -1,0 +1,39 @@
+# prf rule 0
+- rule: DECTS default
+  id: R0
+  priority: 1
+  default: sip:border@border.dects.dec112.eu
+  transport: tcp
+  - actions:
+    add: >
+      Call-Info: <urn:dec112:endpoint:chat:service.dec112.at>;purpose=dec112-ServiceId
+# prf rule 1
+- rule: DECTS sos
+  id: R1
+  priority: 1
+  default: sip:border@border.dects.dec112.eu
+  transport: tcp
+  - conditions:
+    ruri: urn:service:sos
+    header: >
+      To: sip:9144@root.dects.dec112.eu
+  - actions:
+    add: >
+      Call-Info: <urn:dec112:endpoint:chat:service.dec112.at>;purpose=dec112-ServiceId
+    route: sip:border-rule1@border.dects.dec112.eu
+# prf rule 2
+- rule: DECTS sos.ambulance
+  id: R2
+  priority: 1
+  default: sip:border@border.dects.dec112.eu
+  transport: tcp
+  - conditions:
+    ruri: urn:service:sos.ambulance
+    header: >
+      To: sip:9144@root.dects.dec112.eu
+  - actions:
+    add: >
+      Call-Info: <urn:dec112:endpoint:chat:service.dec112.at>;purpose=dec112-ServiceId
+    route: sip:border@border.dects.dec112.eu
+# prf rule 3
+
