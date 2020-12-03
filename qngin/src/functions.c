@@ -84,40 +84,52 @@ char *string_copy(const char *src, size_t len) {
 }
 
 /**
- * @name string_change
- * @brief replace pattern by other string
- * @arg const char *, const char *, const char *
+ * @name uri_pathencode
+ * @brief encodes uri path
+ * @arg const char *
  * @return char* (pointer to new string (free memory!))
  */
 
-char *string_change(const char *in, const char *pattern, const char *by) {
-  size_t outsize = strlen(in) + 1;
+char *uri_pathencode (const char *src) {
 
-  char *res = malloc(outsize);
-  size_t resoffset = 0;
+  char oct;
+  int32_t code;
+  
+  size_t i = 0;
+  size_t j = 0;
+  size_t k = 0;
+  size_t len = strlen(src);
 
-  char *needle;
-  while ((needle = strstr(in, pattern))) {
-    // copy everything up to the pattern
-    memcpy(res + resoffset, in, needle - in);
-    resoffset += needle - in;
+  char *dst = malloc(len * 3 + 1);
 
-    // skip the pattern in the input-string
-    in = needle + strlen(pattern);
-
-    // adjust space for replacement
-    outsize = outsize - strlen(pattern) + strlen(by);
-    res = realloc(res, outsize);
-
-    // copy the pattern
-    memcpy(res + resoffset, by, strlen(by));
-    resoffset += strlen(by);
+  if (dst == NULL) {
+    LOG4ERROR(pL, "no memory");
+    return dst;
   }
 
-  // copy the remaining input
-  strcpy(res + resoffset, in);
+  k = (size_t)(strchr(src, '=') - src) + 1;
 
-  return res;
+  while (i < k) {
+    oct = src[i++];
+    dst[j++] = oct;
+  }
+
+  while (i < len)
+  {
+    oct = src[i++];
+    code = ((int32_t*)uri_encode_tbl)[(unsigned char)oct];
+    
+    if (code) {
+        *((int32_t*)&dst[j]) = code;
+        j += 3;
+    }
+    else dst[j++] = oct;
+  }
+  dst[j] = '\0';
+
+  dst = realloc(dst, strlen(dst) + 1);
+
+  return dst;
 }
 
 /**
@@ -749,8 +761,10 @@ p_qlist_t conf_read(const char *filename, const char *dbname) {
       } else {
         *dp = strdup(tk);
         if (dows) {
-          ws = string_change(sr, HASHTAG, HASHTAGENC);
+          ws = uri_pathencode(sr);
+
           LOG4DEBUG(pL, "new list added for %s", sr);
+
           newlist = (p_qlist_t)malloc(sizeof(s_qlist_t));
           if (newlist == NULL) {
             LOG4ERROR(pL, "could not add list item");
