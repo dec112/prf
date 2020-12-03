@@ -27,7 +27,7 @@ To be able to compile the DEC112 PRF qngin, make sure that you've installed or d
 
 To create a database, you may want to follow steps as explained in [SQLite tutorial](https://www.sqlitetutorial.net/). Make sure that the table containing queue states has the following structure and name. 
 
-```
+```c
 CREATE TABLE "queues" (
 	"uri"	VARCHAR(64),
 	"state"	VARCHAR(16),
@@ -46,7 +46,7 @@ sqlite3 prf.sqlite < SQLitePrfDB.sql
 
 Additionally, qngin requires a YAML configuration file (`./config/config.yml`) that lists all DEC112 Border services to which qngin subscribes HEALTH information. An example is given below.
 
-```        
+```c  
 websockets:
     - ws://yourservice1:8000/mgmt/api/v1?api_key=yourkey1
     - ws://yourservice2:8000/mgmt/api/v1?api_key=yourkey2
@@ -62,7 +62,7 @@ websockets:
 5. `-v` sets qngin to verbose mode (optional)
 6. Note: log4crc may require changes (refer to the example below):
 
-```
+```c
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE log4c SYSTEM "">
 <log4c>

@@ -28,7 +28,7 @@ To be able to compile the DEC112 PRF rngin, make sure that you've installed or d
 
 To create a database, you may want to follow steps as explained in [SQLite tutorial](https://www.sqlitetutorial.net/). Make sure that the table containing queue states has the following structure and name. 
 
-```
+```c
 CREATE TABLE "queues" (
 	"uri"	VARCHAR(64),
 	"state"	VARCHAR(16),
@@ -96,7 +96,7 @@ Additionally, rngin requires a YAML rules file (`./rules/rules.yml`) that includ
 5. `-v` sets rngin to verbose mode (optional)
 6. Note: log4crc may require changes (refer to the example below):
 
-```
+```c
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE log4c SYSTEM "">
 <log4c>
@@ -120,7 +120,7 @@ Additionally, rngin requires a YAML rules file (`./rules/rules.yml`) that includ
 
 To utilize the rule engine from Kamailio (ESRP) you may want to edit the (`kamailio.cfg`) and add the following to the configuration file. Basically, this section creates an http request containing a JSON (tindex, tlabel, ruri, next and the whole message base64 encoded). As soon as the PRF returns a response, the result (`tindex, tlabel, statusCode, target, additionalHeaders[], additionalBodyParts[]`) is parsed and used for further request processing. The main attribute for routing is the `target`, which is the SIP URI of the next hop the request is relayed to. 
 
-```
+```c
 ...
 #!substdef "!MY_PRF_URL!prfsrv=>http://127.0.0.1:8448/api/v1/prf/req!"
 ...
