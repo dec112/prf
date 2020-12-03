@@ -58,7 +58,7 @@ websockets:
 1. Have a look at [Clone or download the repository](https://help.github.com/en/articles/cloning-a-repository)
 2. `cd src/`
 3. `make` and `cp qngin ../bin`
-4. `cd ../bin` and `./qngin -v -c ../config/config.yml -d ../../data/prf.sqlite` (usage: `qngin -v -c <config> -d <database>`)
+4. `cd ../bin` and `./qngin -v -c ../config/config.yml -d ../../data/prf.sqlite`<br/>(usage: `qngin -v -c <config> -d <database>`)
 5. `-v` sets qngin to verbose mode (optional)
 6. Note: log4crc may require changes (refer to the example below):
 
