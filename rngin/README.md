@@ -1,4 +1,4 @@
-# DEC112/DEC112 PRF rngin Subservice
+# DEC112/DEC112 2.0 PRF rngin Subservice
 
 __Guide to build the PRF rngin service from sources.__
 
@@ -117,6 +117,9 @@ Additionally, rngin requires a YAML rules file (`./rules/rules.yml`) that includ
 ```
 
 ## Using the PRF rngin service from Kamailio (ESRP)
+
+To utilize the rule engine from Kamailio (ESRP) you may want to edit the (`kamailio.cfg`) and add the following to the configuration file. Basically, this section creates an http request containing a JSON (tindex, tlabel, ruri, next and the whole message base64 encoded). As soon as the PRF returns a response, the result (tindex, tlabel, statusCode, target, additionalHeaders[], additionalBodyParts[]) is parsed and used for further request processing. The main attribute for routing is the `target`, which is the SIP URI of the next hop the request is relayed to. 
+
 ```
 ...
 #!substdef "!MY_PRF_URL!prfsrv=>http://127.0.0.1:8448/api/v1/prf/req!"
@@ -201,6 +204,10 @@ route[PRFREQUEST] {
     }
     return;
 }
+```
+Right after receiving the response from the ECRF, aou may add the following:
+```
+route(PRFREQUEST);
 ```
 
 ## Docker

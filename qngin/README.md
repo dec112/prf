@@ -1,4 +1,4 @@
-# DEC112/DEC112 PRF qngin service
+# DEC112/DEC112 2.0 PRF qngin service
 
 __Guide to build the PRF qngin service from sources.__
 
