@@ -972,7 +972,7 @@ void delete_rule(s_rulelist_t *rule) {
  *  @return const s_attr_t*
  */
 
-const s_attr_t *get_scannner(const s_attr_t *pattr, const char *name) {
+const s_attr_t *get_scanner(const s_attr_t *pattr, const char *name) {
 
   if (name == NULL) {
     return NULL;
@@ -1135,22 +1135,28 @@ bool check_time(char *tfrom, char *tto) {
 }
 
 /**
- *  @brief  check queue name condition
+ *  @brief  compare strings or match pattern
  *
  *  @arg    char*, char*
  *  @return bool
  */
 
-bool check_string(const char *name, const char *cur_name) {
+bool check_string(const char *name, const char *pattern) {
 
-  if ((name == NULL) || (cur_name == NULL)) {
+  if ((name == NULL) || (pattern == NULL)) {
     return TRUE;
   }
 
-  if (strcmp(name, cur_name) != 0) {
-    return FALSE;
+  if (*pattern == PREFIX) {
+    if (strstr(name, ++pattern) == NULL) {
+      return FALSE;
+    }
+  } else {
+    if (strcmp(name, pattern) != 0) {
+      return FALSE;
+    }
   }
-
+  
   return TRUE;
 }
 
@@ -1286,7 +1292,7 @@ bool cond_nexturi(const char *uri, s_rule_t *rule) {
   if (tmp == NULL) {
     LOG4WARN(pL, "could not extract next uri");
   } else {
-    if (strcmp(tmp, rule->next) == 0) {
+    if (check_string(tmp, rule->next)) {
       res = TRUE;
     } else {
       res = FALSE;
@@ -1329,7 +1335,7 @@ bool cond_ruri(const char *ruri, s_rule_t *rule) {
 
   LOG4DEBUG(pL, "--- RURI CHECK...[%s]", rule->id);
 
-  if (strcmp(ruri, rule->ruri) == 0) {
+  if (check_string(ruri, rule->ruri)) {
     res = TRUE;
   } else {
     res = FALSE;
@@ -1363,6 +1369,7 @@ bool cond_header(s_hdrlist_t *plist, s_rule_t *rule, s_hdrlist_t *shdr) {
   char empty[] = "empty";
 
   int i = 0;
+  int j = 0;
 
   /* do we have something to test ?*/
   if (plist == NULL) {
@@ -1391,9 +1398,10 @@ bool cond_header(s_hdrlist_t *plist, s_rule_t *rule, s_hdrlist_t *shdr) {
       if ((hdr->name != NULL) && (hdr->value != NULL)) {
         value = get_listvalbyname(shdr, hdr->name);
         if (value != NULL) {
-          if (strstr(value, hdr->value) != NULL) {
+          if (check_string(value, hdr->value)) {
             res &= TRUE;
             grp = TRUE;
+            j++;
             LOG4DEBUG(pL, "%s: %s = %s", hdr->name, hdr->value, "TRUE");
           } else {
             res &= FALSE;
@@ -1411,7 +1419,7 @@ bool cond_header(s_hdrlist_t *plist, s_rule_t *rule, s_hdrlist_t *shdr) {
   }
 
   if ((res == TRUE) && (i > 0)) {
-    rule->hits += 1;
+    rule->hits += j;
   }
 
   return res;
@@ -1485,7 +1493,7 @@ bool cond_queue(s_quelist_t *plist, s_rule_t *rule, s_input_t *in, char *uri, co
       if (plist->queue[idx]->size == NULL) {
         res &= TRUE;
       } else {
-        scan = get_scannner(queue_attr, "SIZE");
+        scan = get_scanner(queue_attr, "SIZE");
         /* allocate memory */
         char *(val[scan->fields]);
         for (i = 0; i < scan->fields; i++) {
@@ -1656,7 +1664,7 @@ bool cond_time(s_hdrlist_t *plist, s_rule_t *rule) {
   for (j = 0; j < plist->count; j++) {
     hdr = plist->header[j];
     if (hdr) {
-      scan = get_scannner(time_attr, hdr->name);
+      scan = get_scanner(time_attr, hdr->name);
       /* allocate memory */
       for (i = 0; i < scan->fields; i++) {
         val[i] = (char *)malloc(strlen(hdr->value) + 1);

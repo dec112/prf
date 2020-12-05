@@ -51,6 +51,7 @@
 
 #define COMMA ","
 #define COLON ":"
+#define PREFIX '_'
 
 #define SEP_CRLF '\n'
 
@@ -315,7 +316,7 @@ void init_queue(s_queue_t *);
 void delete_queue(s_quelist_t *);
 s_rule_t *new_ruleitem(void);
 s_queue_t *new_queueitem(void);
-const s_attr_t *get_scannner(const s_attr_t *, const char *);
+const s_attr_t *get_scanner(const s_attr_t *, const char *);
 char *get_listvalbyname(s_hdrlist_t *, const char *);
 int get_queuebyprio(s_quelist_t *, const int);
 
