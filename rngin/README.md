@@ -45,7 +45,7 @@ cd ../data
 sqlite3 prf.sqlite < SQLitePrfDB.sql
 ```
 
-Additionally, rngin requires a YAML rules file (`./rules/rules.yml`) that includes all defined PRF rules. An example is given below.
+Additionally, rngin requires a YAML rules file (`./rules/rules.yml`) that includes all defined PRF rules. Conditions support a strict match, e.g. `To: sip:9144@root.dects.dec112.eu` requires exactly the same header in the SIP request to match the condition. Whereas `From: _user` just requires `user` anywhere within the `From` header, e.g. both `From: sip:user@root.dects.dec112.eu` and `To: sip:john.dow@user.eu` match the condition. An example is given below.
 
 ```        
 # prf rule 0
@@ -66,7 +66,9 @@ Additionally, rngin requires a YAML rules file (`./rules/rules.yml`) that includ
   - conditions:
     ruri: urn:service:sos
     header: >
-      To: sip:9144@root.dects.dec112.eu
+      To: sip:9144@root.dects.dec112.eu,
+      To: _0140,
+      From: _user
   - actions:
     add: >
       Call-Info: <urn:dec112:endpoint:chat:service.dec112.at>;purpose=dec112-ServiceId
