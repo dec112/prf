@@ -294,6 +294,7 @@ void delete_string(char *);
 char *copy_string(const char *, size_t);
 char *replace_string(char *, char *, size_t);
 char *extract_string(const char *, const char *, const char *);
+char *trim_string(char *str, size_t *len);
 char *parse_string(char *, size_t, int);
 char *extract_sipuri(const char *);
 int parse_integer(char *, int);

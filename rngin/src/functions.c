@@ -246,6 +246,13 @@ char *replace_string(char *src, char *new, size_t len) {
   return dst;
 }
 
+/**
+ *  @brief  parses sip uri
+ *
+ *  @arg    char*
+ *  @return char*
+ */
+
 char *extract_sipuri(const char *str) {
 
   char *ptr = NULL;
@@ -277,6 +284,39 @@ char *extract_sipuri(const char *str) {
 
   return ret;
 }
+
+/**
+ *  @brief  removes whitespace that my occur in header name / value
+ *
+ *  @arg    char* size_t*
+ *  @return char*
+ */
+
+char *trim_string(char *str, size_t *len)
+{
+	char *end;
+
+	while(isspace(*str))
+		str++;
+
+  /* just spaces, return NULL */
+	if(*str == 0) {
+    *len = 0;
+    return NULL;
+  }
+
+	end = str + strlen(str) - 1;
+
+	while(end > str && isspace(*end))
+		end--;
+
+	*(end + 1) = '\0';
+
+	*len = (end + 1) - str;
+
+	return str;
+}
+
 
 /**
  *  @brief  extract string between p1 and p2
@@ -590,7 +630,9 @@ s_hdrlist_t *parse_list_crlf(const char *list, const char *hsep) {
   char *line = NULL;
   char *end = NULL;
   char *tmp = NULL;
-
+  char *buf = NULL;
+  char *trim = NULL;
+  
   int i = 0;
   int jmp = 0;
   int count = 0;
@@ -627,13 +669,21 @@ s_hdrlist_t *parse_list_crlf(const char *list, const char *hsep) {
       LOG4WARN(pL, "list line exceeds maximum or wrong separator");
       break;
     }
-
+    
     if (NULL == (line = calloc(i + 1, sizeof(char)))) {
       LOG4ERROR(pL, "no memory");
       break;
     }
 
     memcpy(line, list, i);
+
+    /* check for valid separator */
+    if (strstr(line, hsep) == NULL) {
+      LOG4WARN(pL, "skipping header line with wrong seperator [%s]", line);
+      list = list + (i + jmp);
+      free(line);
+      continue;
+    }
 
     LOG4DEBUG(pL, "[%d]\t[%s]", count, line);
 
@@ -652,12 +702,18 @@ s_hdrlist_t *parse_list_crlf(const char *list, const char *hsep) {
       if (end) {
         len = (size_t)(end - line);
         end += strlen(hsep);
-        plist[count]->name = copy_string(line, len);
+        buf = copy_string(line, len);
+        trim = trim_string(buf, &len);
+        plist[count]->name = copy_string(trim, len);
+        free(buf);
         LOG4DEBUG(pL, "-\t[%s]", plist[count]->name);
       } else {
         len = strlen(line);
         end = line + len;
-        plist[count]->value = copy_string(line, len);
+        buf = copy_string(line, len);
+        trim = trim_string(buf, &len);
+        plist[count]->value = copy_string(trim, len);
+        free(buf);
         LOG4DEBUG(pL, "-\t[%s]", plist[count]->value);
       }
       line = end;
